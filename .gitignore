@@ -1,0 +1,4 @@
+*.ini
+*.pyc
+cyfatal-env/
+__pycache__

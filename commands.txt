@@ -1,0 +1,1 @@
+cd && cd cyfatal && source cyfatal-env/bin/activate && cd scrubs && python twitter_scrub.py source_recognition/search_keywords.txt

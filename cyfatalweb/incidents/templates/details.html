@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+	<div class="col-12"><h3>{{ incident.get_name }}</h3></div>
+</div>
+<div class="row">
+	<div class="col"><strong>Age:</strong> {{ incident.get_age }}</div>
+</div>
+<br/>
+<div class="row">
+	<div class="col"><h4>Details</h4></div>
+</div>
+<div class="row">
+	<div class="col-sm-4"><strong>Date/Time:</strong> {{ incident.incident_date_time }} </div>
+	<div class="col-sm-3"><strong>Location:</strong> {{ incident.get_address }} </div>
+	<div class="col-sm-4"><strong>Coordinates:</strong><a href="https://www.google.com/maps/place/{{ incident.coordinates }}/@{{ incident.coordinates }},13z" target="_blank"> {{ incident.coordinates }} </a></div>
+</div>
+<div class="row">
+	<div class="col-sm-4"><strong>Hit & Run:</strong> {{ incident.get_hit_and_run }} </div>
+	<div class="col-sm-3"><strong>Impaired Driving:</strong> {{ incident.get_impaired_driving }} </div>
+</div>
+<br/>
+<div class="row">
+	<div class="col"><h4>Sources</h4></div>
+</div>
+<div class="row">
+	<div class="col-lg-8">
+		{% if incident_sources %}
+			<table class="table" withd>
+				{% for incident_source in incident_sources %}
+					<tr>
+						<td>{{ incident_source.article_title }}</td> 
+						<td><a href="{{ incident_source.url }}" target="_blank" >{{ incident_source.domain }}</a></td>
+					</tr>
+				{% endfor %}
+			</table>
+		{% else %}
+			<p>No incidents are available.</p>
+		{% endif %}
+	</div>
+</div>
+{% endblock %}

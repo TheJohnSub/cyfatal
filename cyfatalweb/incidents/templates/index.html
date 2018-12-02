@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br/>
+<div class="row">
+	<div class="col">
+		{% if latest_incident_list %}
+			<table id="incidents_table" class="display">
+				<thead>
+					<tr>
+						<th>Date/Time</th>
+						<th>Name</th>
+						<th>Age</th>
+						<th>City</th>
+						<th>State</th>
+						<th>Zip</th>
+					</tr>
+				</thead>
+				{% for incident in latest_incident_list %}
+					<tr>
+						<td>
+							{{ incident.incident_date_time }}
+						</td>									
+						<td>
+							<a href="{% url 'detail' incident.id %}">{{ incident.get_name }}</a>
+						</td>
+						<td>
+							{{ incident.get_age }}
+						</td>
+						<td>
+							{{ incident.city }}
+						</td>
+						<td>
+							{{ incident.state }}
+						</td>
+						<td>
+							{{ incident.zip_code }}
+						</td>
+					</tr>
+				{% endfor %}
+			</table>
+		{% else %}
+			<p>No incidents are available.</p>
+		{% endif %}
+	</div>
+</div>
+<script type="text/javascript">
+		$(document).ready( function () {
+$('#incidents_table').DataTable();
+} );
+</script>
+{% endblock %}

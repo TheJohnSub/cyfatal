@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<title>Cyclist Fatalities</title>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col"><h1><a href="{% url 'index' %}">Cyclist Fatalities</a></h1></div>
+			</div>
+		<nav class="navbar navbar-default" role="navigation">
+			<ul class="nav navbar-nav">
+				<li><a href="{% url 'about' %}">About</a></li>
+				<li><a href="{% url 'contact' %}">Contact</a></li>
+			</ul>
+		</nav>
+			{% block content %}
+			{% endblock %}
+		</div>
+	</div>
+</body>
+</html>
+

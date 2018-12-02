@@ -4,6 +4,7 @@ from TwitterSearch import *
 from peewee import *
 from goose3 import Goose
 from datetime import datetime
+from urllib.parse import urlparse
 from django_models import *
 sys.path.insert(0, 'source_recognition') 
 from source_recognition import *
@@ -62,8 +63,13 @@ def run_tweet_scrub(keywords):
             article = None
             try:
                 article = g.extract(url=twit_url)
+                if (article.canonical_link is not None) and (article.canonical_link is not None):
+                    twit_url = article.canonical_link
+                    if Incidents_SourceCandidate.select().where(Incidents_SourceCandidate.url == twit_url).count() > 0:
+                        print('Continued on URL: ' + twit_url)
+                        continue
                 twit_id = candidate['id']
-                source_candidate = Incidents_SourceCandidate(url=twit_url, domain=article.domain, article_text=article.cleaned_text, article_title=article.title, scrub=scrub, search_feed_id=twit_id, search_feed_url=get_tweet_url(candidate), search_feed_text=candidate['text'].encode('utf8'))
+                source_candidate = Incidents_SourceCandidate(url=twit_url, domain=urlparse(twit_url).netloc, article_text=article.cleaned_text, article_title=article.title, scrub=scrub, search_feed_id=twit_id, search_feed_url=get_tweet_url(candidate), search_feed_text=candidate['text'].encode('utf8'))
                 source_candidate.article_title.replace("'","'")
                 source_candidate.article_text.replace("'","'")
                 source_candidate.search_feed_json = candidate

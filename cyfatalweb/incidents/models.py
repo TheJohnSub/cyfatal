@@ -31,6 +31,27 @@ class Incident(models.Model):
         else:
             return 'Unknown (ID: ' + str(self.id) + ')'
 
+    def get_address(self):
+        return self.city + ', ' + self.state + ' ' + self.zip_code
+
+    def get_age(self):
+        if self.victim_age is not None:
+            return self.victim_age
+        else:
+            return 'Unknown'
+
+    def get_hit_and_run(self):
+        if self.hit_and_run:
+            return True
+        else:
+            return False
+
+    def get_impaired_driving(self):
+        if self.impaired_driving:
+            return True
+        else:
+            return False
+
     def __str__(self):
         return self.get_name()
 

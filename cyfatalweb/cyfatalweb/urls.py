@@ -20,9 +20,9 @@ from django.conf.urls.static import static
 
 
 urlpatterns = [
-    path(r'', include('incidents.urls')),
-    path(r'^jet/', include('jet.urls', 'jet')),  # Django JET URLS
-    path(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  # Django JET dashboard URLS
+    path('', include('incidents.urls')),
+    path('jet', include('jet.urls', 'jet')),  # Django JET URLS
+    path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  # Django JET dashboard URLS
     path('admin/', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

@@ -50,9 +50,9 @@ class IncidentSourceAdmin(admin.ModelAdmin):
 	is_not_usa_col.short_description = 'Not USA'
 	
 	fieldsets = [
-		(None, {'fields': [('url', 'site_name', 'domain')]}),
-		(None, {'fields': ['article_title', 'article_text']}),
-		(None, {'fields': [('is_related', 'is_not_USA', 'Incident')]})
+		('Website', {'fields': [('url', 'site_name', 'domain')]}),
+		('Article', {'fields': ['article_title', 'article_text']}),
+		('Review', {'fields': [('is_related', 'is_not_USA', 'is_reviewed', 'Incident')]})
 	]
 	actions = [mark_not_in_usa, mark_reviewed]
 

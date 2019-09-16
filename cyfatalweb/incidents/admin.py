@@ -14,7 +14,7 @@ class IncidentAdmin(admin.ModelAdmin):
 	victim_name_col.short_description = 'Victim Name'
 
 	fieldsets = [
-		(None, {'fields': ['incident_date_time', ('city', 'state', 'zip_code', 'coordinates'), ('hit_and_run', 'impaired_driving')]}),
+		(None, {'fields': ['incident_date_time', ('city', 'state', 'zip_code', 'coordinates'), ('hit_and_run', 'impaired_driving'), ('notes')]}),
 		('Victim Information', {'fields': [('victim_name', 'victim_gender', 'victim_age')]}),
 		('Motorist Information', {'fields': [('motorist_name', 'motorist_gender', 'motorist_age')]}),
 		('Vehicle Information', {'fields': [('vehicle_type', 'vehicle_make', 'vehicle_model')]})
@@ -52,7 +52,7 @@ class IncidentSourceAdmin(admin.ModelAdmin):
 	fieldsets = [
 		('Website', {'fields': [('url', 'site_name', 'domain')]}),
 		('Article', {'fields': ['article_title', 'article_text']}),
-		('Review', {'fields': [('is_related', 'is_not_USA', 'is_reviewed', 'Incident')]})
+		('Review', {'fields': [('is_related', 'is_not_USA', 'is_reviewed', 'Incident'), ('notes')]})
 	]
 	actions = [mark_not_in_usa, mark_reviewed]
 

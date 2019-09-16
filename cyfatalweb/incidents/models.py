@@ -20,6 +20,8 @@ class Incident(models.Model):
     vehicle_type = models.CharField(null = True, max_length = 100, blank = True)
     vehicle_make = models.CharField(null = True, max_length = 100, blank = True)
     vehicle_model = models.CharField(null = True, max_length = 100, blank = True)
+    notes = models.TextField(null = True, blank = True)
+
     
     def get_name(self):
         if self.victim_name is not None and self.victim_name != '':
@@ -67,6 +69,8 @@ class IncidentSource(models.Model):
     is_related = models.NullBooleanField(null = True)
     is_not_USA = models.NullBooleanField(null = True)
     is_reviewed = models.NullBooleanField(null = False)
+    notes = models.TextField(null = True, blank = True)
+
     source_candidate_id = models.IntegerField(null = True)
     Incident = models.ForeignKey(Incident, on_delete=models.CASCADE, blank=True, null=True)
     def __str__(self):

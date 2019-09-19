@@ -93,6 +93,3 @@ class Error(models.Model):
 	associated_url = models.CharField(null = True, max_length = 300)
 	associated_source_candidate_id = models.IntegerField(null=True)
 	associated_scrub_id = models.IntegerField(null=True)
-	
-	def __init__(self): 
-		self.error_date_time = datetime.datetime.now()

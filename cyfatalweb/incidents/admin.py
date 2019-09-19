@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import Incident, IncidentSource, Scrub
+from .models import Incident, IncidentSource, Scrub, Error
+from django.urls import reverse
+from django.utils.safestring import mark_safe
+
 
 class IncidentSourceInline(admin.StackedInline):
 	model = IncidentSource
@@ -70,9 +73,33 @@ class ScrubAdmin(admin.ModelAdmin):
 
 	readonly_fields = list_fields_str
 
+class ErrorAdmin(admin.ModelAdmin):
+	list_display = ['error_date_time', 'file_name', 'error_code', 'error_text', 'associated_url', 'associated_source_candidate_id', 'scrub_link', 'call_stack']
+	
+
+	def scrub_link(self, error):
+		if error.associated_scrub_id is None:
+			return "None"
+		url = '/admin/incidents/scrub/' + str(error.associated_scrub_id) + '/change/'
+		link = '<a href="%s">%s</a>' % (url, error.associated_scrub_id)
+		return mark_safe(link)
+	scrub_link.short_description = 'Associated Scrub ID'
+
+
+	def has_add_permission(self, request, obj=None):
+		return False
+	def has_delete_permission(self, request, obj=None):
+		return False
+
+	list_fields_str = []
+	fields =list_display
+
+	readonly_fields = fields
+
 
 
 admin.site.register(Incident, IncidentAdmin)
 admin.site.register(IncidentSource, IncidentSourceAdmin)
 admin.site.register(Scrub, ScrubAdmin)
+admin.site.register(Error, ErrorAdmin)
 

@@ -1,5 +1,6 @@
 import sys
 import configparser
+import traceback
 from TwitterSearch import *
 from peewee import *
 from goose3 import Goose
@@ -53,6 +54,7 @@ def filter_twitter_search_resp(search_resp):
 def retrieve_article_as_candidate(scrub, candidate, article_url):
 	g = Goose()
 	article = None
+	source_candidate = None
 	try:
 		article = g.extract(url=article_url)
 		if (article.canonical_link is not None) and (article.canonical_link != article_url):
@@ -66,7 +68,17 @@ def retrieve_article_as_candidate(scrub, candidate, article_url):
 		source_candidate.article_title.replace("'","'")
 		source_candidate.article_text.replace("'","'")
 		source_candidate.search_feed_json = candidate
-		source_candidate.save()
+
+		try:
+			source_candidate.save()
+		except Exception as e:
+			source_candidate.search_feed_json = ''
+			source_candidate.save()
+
+			#Query this error code in prod to see if this issue is happening in prod or just isolated to dev.
+			error = Incidents_Error(error_date_time = datetime.datetime.now(), error_code=102, file_name=__file__, error_text=str(e), associated_url=article_url, associated_scrub_id=scrub, call_stack=traceback.format_exc)
+			if source_candidate is not None:
+				error.associated_source_candidate_id = source_candidate
 		
 		if (article.opengraph is not None) and ('site_name' in article.opengraph):
 			source_candidate.site_name = article.opengraph['site_name']
@@ -87,6 +99,10 @@ def retrieve_article_as_candidate(scrub, candidate, article_url):
 		return source_candidate.is_related
 
 	except Exception as e:
+		error = Incidents_Error(error_date_time = datetime.datetime.now(), error_code=101, file_name=__file__, error_text=str(e), associated_url=article_url, associated_scrub_id=scrub, call_stack=traceback.format_exc)
+		if source_candidate is not None:
+			error.associated_source_candidate_id = source_candidate
+		error.save()
 		print(article_url)
 		if article:
 			print(type(article.cleaned_text))
@@ -96,6 +112,7 @@ def retrieve_article_as_candidate(scrub, candidate, article_url):
 
 def run_tweet_scrub(keywords, ts):
 	print('Running scrub for keywords: ' + str(keywords))
+	scrub = None
 	try:
 		tso = TwitterSearchOrder() 
 		tso.set_keywords(keywords) 
@@ -122,6 +139,10 @@ def run_tweet_scrub(keywords, ts):
 		scrub.save()
 
 	except TwitterSearchException as e:
+		error = Incidents_Error(error_date_time = datetime.datetime.now(), error_code=100, file_name=__file__, error_text=str(e), associated_url=article_url, call_stack=traceback.format_exc)
+		if scrub is not None:
+			error.associated_scrub_id = scrub
+		error.save()
 		print(e)
 
 	print()

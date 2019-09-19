@@ -61,6 +61,16 @@ class Incidents_SourceCandidate(BaseSource):
 	search_feed_text = TextField(null = True)
 	search_feed_json = TextField(null = True)
 
+class Incidents_Error(BaseModel):
+	error_date_time = DateTimeField(null = True)
+	error_code = IntegerField(null = True)
+	file_name = CharField(null = True)
+	error_text = TextField(null = True)
+	call_stack = TextField(null = True)
+	associated_url = CharField(null = True)
+	associated_source_candidate_id = IntegerField(null=True)
+	associated_scrub_id = IntegerField(null=True)
+
 if not (Incidents_SourceCandidate.table_exists()):
 	with database:
 		Incidents_SourceCandidate.create_table()

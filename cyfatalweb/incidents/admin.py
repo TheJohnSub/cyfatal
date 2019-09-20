@@ -9,20 +9,34 @@ class IncidentSourceInline(admin.StackedInline):
 	extra = 1
 
 class IncidentAdmin(admin.ModelAdmin):
-	#inlines = [IncidentSourceInline]
-	list_display = ('victim_name_col', 'city', 'state', 'incident_date_time')
+	list_display = ('victim_name_col', 'city', 'state', 'incident_date_time', 'related_sources_count')
 
 	def victim_name_col(self,obj):
 		return obj.get_name()
 	victim_name_col.short_description = 'Victim Name'
 
+	def related_sources_count(self, obj):
+		count = IncidentSource.objects.filter(Incident=obj).count()
+		return str(count)
+	related_sources_count.short_description = 'Count'
+
+	def related_sources(self, obj):
+		list_str = ''
+		for source in IncidentSource.objects.filter(Incident=obj):
+			url = '/admin/incidents/incidentsource/' + str(source.id) + '/change/'
+			link = '<a href="%s">%s | %s</a>' % (url, source.article_title, source.domain)
+			list_str += link + '<br/>'
+		return mark_safe(list_str)
+	related_sources.short_description = 'Related Sources'
+
 	fieldsets = [
 		(None, {'fields': ['incident_date_time', ('city', 'state', 'zip_code', 'coordinates'), ('hit_and_run', 'impaired_driving'), ('notes')]}),
 		('Victim Information', {'fields': [('victim_name', 'victim_gender', 'victim_age')]}),
 		('Motorist Information', {'fields': [('motorist_name', 'motorist_gender', 'motorist_age')]}),
-		('Vehicle Information', {'fields': [('vehicle_type', 'vehicle_make', 'vehicle_model')]})
+		('Vehicle Information', {'fields': [('vehicle_type', 'vehicle_make', 'vehicle_model')]}),
+		('Sources', {'fields': [('related_sources')]})
     ]
-	readonly_fields = ['id']
+	readonly_fields = ['related_sources_count', 'related_sources', 'id']
 
 def mark_not_in_usa(modeladmin, request, queryset):
     queryset.update(is_not_USA=True)
@@ -91,8 +105,7 @@ class ErrorAdmin(admin.ModelAdmin):
 	def has_delete_permission(self, request, obj=None):
 		return False
 
-	list_fields_str = []
-	fields =list_display
+	fields = list_display
 
 	readonly_fields = fields
 

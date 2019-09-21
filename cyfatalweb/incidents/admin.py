@@ -21,6 +21,8 @@ class IncidentAdmin(admin.ModelAdmin):
 	related_sources_count.short_description = 'Count'
 
 	def related_sources(self, obj):
+		if obj is None or obj.id is None:
+			return "No related sources."
 		list_str = ''
 		for source in IncidentSource.objects.filter(Incident=obj):
 			url = '/admin/incidents/incidentsource/' + str(source.id) + '/change/'
@@ -65,13 +67,21 @@ class IncidentSourceAdmin(admin.ModelAdmin):
 		return obj.is_not_USA
 	is_not_usa_col.boolean = True
 	is_not_usa_col.short_description = 'Not USA'
-	
+
+	def url_go_button(self, obj):
+		if obj is None or obj.url is None:
+			return ''
+		return mark_safe('<a href="%s" target="_blank">%s</a>' % (obj.url, obj.url))
+	url_go_button.short_description = 'Link to Article'
+
 	fieldsets = [
-		('Website', {'fields': [('url', 'site_name', 'domain')]}),
+		('Website', {'fields': [('url', 'site_name', 'domain'), ('url_go_button')]}),
 		('Article', {'fields': ['article_title', 'article_text']}),
 		('Review', {'fields': [('is_related', 'is_not_USA', 'is_reviewed', 'Incident'), ('notes')]})
 	]
 	actions = [mark_not_in_usa, mark_reviewed]
+	readonly_fields = ['url_go_button']
+
 
 class ScrubAdmin(admin.ModelAdmin):
 	list_display = ['scrub_type', 'search_keywords', 'run_date_time', 'related_candidates']

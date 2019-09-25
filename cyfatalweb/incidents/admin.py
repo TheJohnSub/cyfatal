@@ -9,6 +9,8 @@ class IncidentSourceInline(admin.StackedInline):
 	extra = 1
 
 class IncidentAdmin(admin.ModelAdmin):
+	class Media:
+		js = ("js/citystatezip.js",)
 	list_display = ('victim_name_col', 'city', 'state', 'incident_date_time', 'related_sources_count')
 
 	def victim_name_col(self,obj):
